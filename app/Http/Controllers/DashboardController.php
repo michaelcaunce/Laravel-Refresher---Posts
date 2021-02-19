@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -11,8 +13,12 @@ class DashboardController extends Controller
         $this->middleware(['auth']);
     }
 
-    public function index() {
+     public function index(User $user) {
+        $posts = $user->posts()->with(['user', 'likes'])->paginate(20);
         
-        return view('dashboard');
+        return view('dashboard', [
+            'user' => $user,
+            'posts' => $posts,
+        ]);
     }
 }
